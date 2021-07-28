@@ -1,1 +1,2 @@
-export { TilesRowsAndColsEnum } from "./enums";
+export { ControlNameEnum } from "./enums";
+export { generateRandomColors } from "./randomColor";

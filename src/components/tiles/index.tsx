@@ -4,10 +4,18 @@ import {
   tilesGameActions,
   tilesGameStateSelector,
 } from "../../store/tilesGame";
+import { Moves } from "./moves";
 import { TilesContainer } from "./style";
 
 export const Tiles = () => {
-  const { isGameStart, square } = useSelector(tilesGameStateSelector);
+  const {
+    moves,
+    bestMoves,
+    isGameStart,
+    square,
+    isGameCompleted,
+    isViewMovesMode,
+  } = useSelector(tilesGameStateSelector);
   const dispatch = useDispatch();
 
   const handleSetOrigin = (color: string) => {
@@ -15,28 +23,40 @@ export const Tiles = () => {
   };
 
   return (
-    <TilesContainer>
+    <>
       {isGameStart && (
-        <table className="tile">
-          <tbody>
-            {square.map((l) => (
-              <tr>
-                {l.map((c) => (
-                  <td
-                    style={{ backgroundColor: c.color }}
-                    className={c.origin ? " origin" : ""}
-                    onClick={(e) => {
-                      handleSetOrigin(c.color);
-                    }}
-                  >
-                    <div></div>
-                  </td>
+        <>
+          <Moves moves={moves} bestMoves={bestMoves} />
+          <TilesContainer>
+            <table
+              className={`tile ${
+                isGameCompleted && !isViewMovesMode ? "disabled" : ""
+              }`}
+            >
+              <tbody>
+                {square.map((row) => (
+                  <tr key={Math.random()}>
+                    {row.map((col) => (
+                      <td
+                        style={{ backgroundColor: col.color }}
+                        className={`${col.origin ? "origin" : ""} ${
+                          isGameCompleted ? "disabled" : ""
+                        }`}
+                        onClick={(e) => {
+                          handleSetOrigin(col.color);
+                        }}
+                        key={Math.random()}
+                      >
+                        <div></div>
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </tbody>
+            </table>
+          </TilesContainer>
+        </>
       )}
-    </TilesContainer>
+    </>
   );
 };

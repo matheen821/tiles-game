@@ -1,17 +1,18 @@
 import { ISquare } from "../store/tilesGame/types";
 
-const createTiles = (cols: number, rows: number, colors: string[]) =>
-  Array.from({ length: cols }).map((v, l) =>
-    Array.from({ length: rows }).map((x, c) => ({
+const createTiles = (cols: number, rows: number, colors: string[]) => {
+  return Array.from({ length: cols }).map((rowItem, row) => {
+    return Array.from({ length: rows }).map((colItem, col) => ({
       color: colors[Math.floor(Math.random() * colors.length)],
-      origin: l + c === 0,
-    }))
-  );
+      origin: row + col === 0,
+    }));
+  });
+};
 
-const updateOrigin = (map: ISquare[][], color: string) => {
-  let square = [...map];
+const updateOrigin = (previousSquare: ISquare[][], color: string) => {
+  let square = [...previousSquare];
 
-  const get = (row: number, col: number) => {
+  const getTile = (row: number, col: number) => {
     try {
       return square[row][col] || { color: "", origin: false };
     } catch (e) {
@@ -19,7 +20,7 @@ const updateOrigin = (map: ISquare[][], color: string) => {
     }
   };
 
-  const treeSearch = (row: number, col: number) => {
+  const updateTileSearch = (row: number, col: number) => {
     if (square[row][col].color === color) {
       square[row][col].origin = true;
     }
@@ -28,26 +29,41 @@ const updateOrigin = (map: ISquare[][], color: string) => {
       square[row][col].color = color;
     }
 
-    if ((get(row + 1, col).color === color) !== get(row + 1, col).origin) {
-      treeSearch(row + 1, col);
+    if (
+      (getTile(row + 1, col).color === color) !==
+      getTile(row + 1, col).origin
+    ) {
+      updateTileSearch(row + 1, col);
     }
 
-    if ((get(row, col + 1).color === color) !== get(row, col + 1).origin) {
-      treeSearch(row, col + 1);
+    if (
+      (getTile(row, col + 1).color === color) !==
+      getTile(row, col + 1).origin
+    ) {
+      updateTileSearch(row, col + 1);
     }
 
-    if ((get(row - 1, col).color === color) !== get(row - 1, col).origin) {
-      treeSearch(row - 1, col);
+    if (
+      (getTile(row - 1, col).color === color) !==
+      getTile(row - 1, col).origin
+    ) {
+      updateTileSearch(row - 1, col);
     }
 
-    if ((get(row, col - 1).color === color) !== get(row, col - 1).origin) {
-      treeSearch(row, col - 1);
+    if (
+      (getTile(row, col - 1).color === color) !==
+      getTile(row, col - 1).origin
+    ) {
+      updateTileSearch(row, col - 1);
     }
   };
+  updateTileSearch(0, 0);
 
-  treeSearch(0, 0);
+  const isGameCompleted = () => {
+    return square.flat(2).every((tile) => tile.origin);
+  };
 
-  return square;
+  return { square, isGameCompleted: isGameCompleted() };
 };
 
 export { createTiles, updateOrigin };

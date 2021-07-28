@@ -1,15 +1,18 @@
-import { TilesRowsAndColsEnum } from "../../utils";
+import { ControlNameEnum } from "../../utils";
 
 export interface ITilesGameState {
   rows: number;
   cols: number;
-  allColors: string[];
-  selectedColors: string[];
+  colorsCount: number;
   selectedColor: string;
   isGameStart: boolean;
-  score: number;
-  highScore: number;
+  moves: number;
+  bestMoves: number;
   square: ISquare[][];
+  isGameCompleted: boolean;
+  recordedMoves: IRecordedMove[];
+  isViewMovesMode: boolean;
+  viewMovesIndex: number;
 }
 
 export type ContainerState = ITilesGameState;
@@ -18,7 +21,12 @@ export interface ISquare {
   color: string;
   origin: boolean;
 }
-export interface IRowsAndColsCount {
+export interface IControlAction {
   count: number;
-  type: TilesRowsAndColsEnum;
+  type: ControlNameEnum;
+}
+
+export interface IRecordedMove {
+  moves: number;
+  square: ISquare[][];
 }

@@ -1,39 +1,67 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TilesRowsAndColsEnum } from "../../utils";
-import { Control } from "./control";
+import { ControlNameEnum } from "../../utils";
+import { Controls } from "./controls";
+import { ActionButtons } from "./actionButtons";
+import { GameResult } from "./gameResult";
 import {
   tilesGameActions,
   tilesGameStateSelector,
 } from "../../store/tilesGame";
-import { Button } from "@material-ui/core";
+import { HeaderContainer } from "./style";
 
 export const Header = () => {
-  const { rows, cols, isGameStart } = useSelector(tilesGameStateSelector);
+  const {
+    colorsCount,
+    rows,
+    cols,
+    isGameStart,
+    moves,
+    bestMoves,
+    isGameCompleted,
+    isViewMovesMode,
+  } = useSelector(tilesGameStateSelector);
+
   const dispatch = useDispatch();
 
-  const handleRowsAndColsChange = (
-    count: number,
-    type: TilesRowsAndColsEnum
-  ) => {
-    dispatch(tilesGameActions.setRowsAndCols({ count, type }));
+  const handleControlAction = (count: number, type: ControlNameEnum) => {
+    dispatch(tilesGameActions.setControlActionsData({ count, type }));
   };
 
   const handleStartGame = () => {
-    dispatch(tilesGameActions.setSquare());
+    dispatch(tilesGameActions.startGame());
+  };
+
+  const handleSolveByComputer = () => {
+    dispatch(tilesGameActions.solveByComputer());
+  };
+
+  const handleViewMoves = () => {
+    dispatch(tilesGameActions.setIsViewMovesMode());
   };
 
   return (
-    <div className="header">
-      <h2>Ever Real Challenge Game!!</h2>
-      <Button onClick={handleStartGame} variant="outlined" color="primary">
-        {isGameStart ? "Restart" : "Start Game"}
-      </Button>
-      <Control
+    <HeaderContainer>
+      <h2>Ever Real Challenge!!</h2>
+      <Controls
+        colorsCount={colorsCount}
         rows={rows}
         cols={cols}
-        handleRowsAndColsChange={handleRowsAndColsChange}
+        handleControlAction={handleControlAction}
       />
-    </div>
+      <ActionButtons
+        isGameStart={isGameStart}
+        handleStartGame={handleStartGame}
+        handleSolveByComputer={handleSolveByComputer}
+      />
+      <GameResult
+        moves={moves}
+        bestMoves={bestMoves}
+        isGameCompleted={isGameCompleted}
+        isViewMovesMode={isViewMovesMode}
+        handleViewMoves={handleViewMoves}
+        handleControlAction={handleControlAction}
+      />
+    </HeaderContainer>
   );
 };
