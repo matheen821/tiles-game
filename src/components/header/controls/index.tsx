@@ -10,7 +10,7 @@ export const Controls: FC<IControlsProps> = (props) => {
   return (
     <ControlContainer>
       <Grid container justifyContent="center" alignItems="center">
-        <Grid item lg={2} xs={3}>
+        <Grid item lg={2} xs={4}>
           <Control
             title="Rows"
             count={rows}
@@ -18,7 +18,7 @@ export const Controls: FC<IControlsProps> = (props) => {
             handleControlAction={handleControlAction}
           />
         </Grid>
-        <Grid item lg={2} xs={3}>
+        <Grid item lg={2} xs={4}>
           <Control
             title="Cols"
             count={cols}
@@ -26,7 +26,7 @@ export const Controls: FC<IControlsProps> = (props) => {
             handleControlAction={handleControlAction}
           />
         </Grid>
-        <Grid item lg={2} xs={3}>
+        <Grid item lg={2} xs={4}>
           <Control
             title="Colors"
             count={colorsCount}

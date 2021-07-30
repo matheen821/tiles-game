@@ -6,7 +6,7 @@ export const MoveBox: FC<IMoveBoxProps> = (props) => {
   const { title, count } = props;
 
   return (
-    <Grid item lg={2} xs={3} className="moves-section">
+    <Grid item lg={2} xs={4} className="moves-section">
       <div className="moves-title">
         {title === "Best" && <EmojiEventsIcon fontSize="small" />}
         {title}

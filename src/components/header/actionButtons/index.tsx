@@ -6,7 +6,15 @@ import ComputerIcon from "@material-ui/icons/Computer";
 import { ActionsContainer } from "./style";
 
 export const ActionButtons: FC<IActionButtonsProps> = (props) => {
-  const { isGameStart, handleStartGame, handleSolveByComputer } = props;
+  const {
+    isGameStart,
+    moves,
+    isGameCompleted,
+    isViewMovesMode,
+    handleStartGame,
+    handleResetGame,
+    handleSolveByComputer,
+  } = props;
 
   return (
     <ActionsContainer>
@@ -17,15 +25,8 @@ export const ActionButtons: FC<IActionButtonsProps> = (props) => {
         className="action-button"
         size="small"
       >
-        {isGameStart ? (
-          <>
-            <ReplayIcon fontSize="small" /> Restart
-          </>
-        ) : (
-          <>
-            <PlayArrowIcon /> Start
-          </>
-        )}
+        <PlayArrowIcon />
+        {isGameStart ? "New Game" : "Start"}
       </Button>
       <Button
         onClick={handleSolveByComputer}
@@ -33,16 +34,31 @@ export const ActionButtons: FC<IActionButtonsProps> = (props) => {
         color="primary"
         className="action-button solve-by-computer-button"
         size="small"
-        disabled={!isGameStart}
+        disabled={!isGameStart || isGameCompleted}
       >
-        <ComputerIcon /> Solve by computer
+        <ComputerIcon /> Solve
       </Button>
+      {(moves > 0 || isViewMovesMode) && (
+        <Button
+          onClick={handleResetGame}
+          variant="outlined"
+          color="secondary"
+          className="action-button"
+          size="small"
+        >
+          <ReplayIcon fontSize="small" /> Reset
+        </Button>
+      )}
     </ActionsContainer>
   );
 };
 
 export interface IActionButtonsProps {
   isGameStart: boolean;
+  moves: number;
+  isGameCompleted: boolean;
+  isViewMovesMode: boolean;
   handleStartGame: () => void;
+  handleResetGame: () => void;
   handleSolveByComputer: () => void;
 }

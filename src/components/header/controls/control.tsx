@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import { IconButton } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
+import SkipNextIcon from "@material-ui/icons/SkipNext";
 import { ControlNameEnum } from "../../../utils/enums";
 
 export const Control: FC<IControlProps> = (props) => {
@@ -18,7 +19,7 @@ export const Control: FC<IControlProps> = (props) => {
           size="small"
         >
           {controlType === ControlNameEnum.ViewMoves ? (
-            <RemoveIcon />
+            <SkipPreviousIcon />
           ) : (
             <RemoveIcon />
           )}
@@ -30,7 +31,7 @@ export const Control: FC<IControlProps> = (props) => {
           size="small"
         >
           {controlType === ControlNameEnum.ViewMoves ? (
-            <PlayArrowIcon />
+            <SkipNextIcon />
           ) : (
             <AddIcon />
           )}

@@ -20,6 +20,7 @@ export const Header = () => {
     bestMoves,
     isGameCompleted,
     isViewMovesMode,
+    recordedMoves,
   } = useSelector(tilesGameStateSelector);
 
   const dispatch = useDispatch();
@@ -30,6 +31,10 @@ export const Header = () => {
 
   const handleStartGame = () => {
     dispatch(tilesGameActions.startGame());
+  };
+
+  const handleResetGame = () => {
+    dispatch(tilesGameActions.resetGame());
   };
 
   const handleSolveByComputer = () => {
@@ -51,12 +56,17 @@ export const Header = () => {
       />
       <ActionButtons
         isGameStart={isGameStart}
+        moves={moves}
+        isGameCompleted={isGameCompleted}
+        isViewMovesMode={isViewMovesMode}
         handleStartGame={handleStartGame}
+        handleResetGame={handleResetGame}
         handleSolveByComputer={handleSolveByComputer}
       />
       <GameResult
         moves={moves}
         bestMoves={bestMoves}
+        totalRecordedMoves={recordedMoves.length - 1}
         isGameCompleted={isGameCompleted}
         isViewMovesMode={isViewMovesMode}
         handleViewMoves={handleViewMoves}

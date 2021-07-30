@@ -9,6 +9,7 @@ export const GameResult: FC<IStartButtonsProps> = (props) => {
   const {
     moves,
     bestMoves,
+    totalRecordedMoves,
     isGameCompleted,
     isViewMovesMode,
     handleViewMoves,
@@ -20,10 +21,12 @@ export const GameResult: FC<IStartButtonsProps> = (props) => {
       {isGameCompleted && !isViewMovesMode && (
         <>
           <h3>
-            Congratulations {moves === bestMoves && <i>Best Moves!!"</i>} 🎉
+            Congratulations{" "}
+            {totalRecordedMoves === bestMoves && <i>Best Moves!!"</i>} 🎉
           </h3>
           <p>
-            You have completed game in <strong>{moves}</strong> Moves!!
+            You have completed game in <strong>{totalRecordedMoves}</strong>{" "}
+            Moves!!
           </p>
         </>
       )}
@@ -67,6 +70,7 @@ export const GameResult: FC<IStartButtonsProps> = (props) => {
 export interface IStartButtonsProps {
   moves: number;
   bestMoves: number;
+  totalRecordedMoves: number;
   isGameCompleted: boolean;
   isViewMovesMode: boolean;
   handleViewMoves: () => void;

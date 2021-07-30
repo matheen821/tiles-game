@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generateRandomColors, ControlNameEnum } from "../../utils";
 import { ContainerState, IControlAction } from "./types";
-import { createTiles, updateOrigin, solveByComputer } from "../../engines";
+import { createTiles, updateOrigin, solver } from "../../engines";
 
 export const initialState: ContainerState = {
   rows: 6,
@@ -44,7 +44,7 @@ const tilesGameSlice = createSlice({
       }
 
       if (type !== ControlNameEnum.ViewMoves) {
-        tilesGameSlice.caseReducers.resetGame(state);
+        tilesGameSlice.caseReducers.stopAndResetGame(state);
       }
     },
     setSquare(state) {
@@ -65,6 +65,17 @@ const tilesGameSlice = createSlice({
       state.recordedMoves = [];
       tilesGameSlice.caseReducers.setSquare(state);
     },
+    resetGame(state) {
+      state.viewMovesIndex = 0;
+      state.isViewMovesMode = false;
+      state.isGameCompleted = false;
+      state.moves = 0;
+      if (state.recordedMoves.length) {
+        state.square = state.recordedMoves[0]?.square;
+        state.recordedMoves = [];
+        tilesGameSlice.caseReducers.setRecordedMoves(state);
+      }
+    },
     setOrigin(state, { payload }: PayloadAction<string>) {
       state.selectedColor = payload;
       const { square, isGameCompleted } = updateOrigin(
@@ -74,11 +85,10 @@ const tilesGameSlice = createSlice({
       state.square = square;
       state.isGameCompleted = isGameCompleted;
       state.moves++;
-
       tilesGameSlice.caseReducers.setRecordedMoves(state);
-
       if (isGameCompleted) {
         tilesGameSlice.caseReducers.setBestMoves(state);
+        state.isViewMovesMode = false;
       }
     },
     setBestMoves(state) {
@@ -89,14 +99,22 @@ const tilesGameSlice = createSlice({
         state.bestMoves = state.moves;
       }
     },
-    resetGame(state) {
+    stopAndResetGame(state) {
       state.isGameStart = false;
       state.moves = 0;
       state.bestMoves = 0;
       state.isGameCompleted = false;
     },
     solveByComputer(state) {
-      state.square = solveByComputer(state.square);
+      const { square, isGameCompleted } = solver(state.square);
+      state.square = square;
+      state.isGameCompleted = isGameCompleted;
+      state.moves = state.moves + 1;
+      tilesGameSlice.caseReducers.setRecordedMoves(state);
+      if (isGameCompleted) {
+        tilesGameSlice.caseReducers.setBestMoves(state);
+        state.isViewMovesMode = false;
+      }
     },
     setRecordedMoves(state) {
       state.recordedMoves = [
@@ -106,8 +124,10 @@ const tilesGameSlice = createSlice({
     },
     setIsViewMovesMode(state) {
       state.isViewMovesMode = !state.isViewMovesMode;
-      state.viewMovesIndex = state.recordedMoves.length - 1;
-      tilesGameSlice.caseReducers.viewMoves(state);
+      if (state.isViewMovesMode || state.isGameCompleted) {
+        state.viewMovesIndex = state.recordedMoves.length - 1;
+        tilesGameSlice.caseReducers.viewMoves(state);
+      }
     },
     viewMoves(state) {
       if (state.viewMovesIndex >= 0) {
