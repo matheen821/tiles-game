@@ -17,6 +17,7 @@ export const Control: FC<IControlProps> = (props) => {
           onClick={() => handleControlAction(-1, controlType)}
           color="primary"
           size="small"
+          data-testid="control-decrement"
         >
           {controlType === ControlNameEnum.ViewMoves ? (
             <SkipPreviousIcon />
@@ -24,11 +25,12 @@ export const Control: FC<IControlProps> = (props) => {
             <RemoveIcon />
           )}
         </IconButton>
-        <span className="control-count"> {count}</span>
+        <span className="control-count">{count}</span>
         <IconButton
           onClick={() => handleControlAction(1, controlType)}
           color="primary"
           size="small"
+          data-testid="control-increment"
         >
           {controlType === ControlNameEnum.ViewMoves ? (
             <SkipNextIcon />

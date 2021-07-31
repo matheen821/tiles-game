@@ -20,7 +20,7 @@ export const GameResult: FC<IStartButtonsProps> = (props) => {
     <Grid className="game-result">
       {isGameCompleted && !isViewMovesMode && (
         <>
-          <h3>
+          <h3 data-testid="success-message">
             Congratulations{" "}
             {totalRecordedMoves === bestMoves && <i>Best Moves!!"</i>} 🎉
           </h3>
@@ -44,6 +44,7 @@ export const GameResult: FC<IStartButtonsProps> = (props) => {
               color="primary"
               className="view-moves-button"
               size="small"
+              data-testid="view-or-stop-moves-button"
             >
               <VisibilityIcon />
               {isViewMovesMode ? " Stop" : " View Moves"}
@@ -52,7 +53,7 @@ export const GameResult: FC<IStartButtonsProps> = (props) => {
         </Grid>
         {isViewMovesMode && (
           <Grid item lg={2} xs={6}>
-            <ControlContainer>
+            <ControlContainer data-testid="view-moves-control">
               <Control
                 title="View Moves"
                 count={moves}

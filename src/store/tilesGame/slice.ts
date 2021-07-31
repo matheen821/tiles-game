@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generateRandomColors, ControlNameEnum } from "../../utils";
 import { ContainerState, IControlAction } from "./types";
-import { createTiles, updateOrigin, solver } from "../../engines";
+import { createTiles, GameEngine, solver } from "../../engines";
 
 export const initialState: ContainerState = {
   rows: 6,
@@ -78,15 +79,12 @@ const tilesGameSlice = createSlice({
     },
     setOrigin(state, { payload }: PayloadAction<string>) {
       state.selectedColor = payload;
-      const { square, isGameCompleted } = updateOrigin(
-        state.square,
-        state.selectedColor
-      );
-      state.square = square;
-      state.isGameCompleted = isGameCompleted;
+      const gameEngine = new GameEngine(state.square, state.selectedColor);
+      state.square = gameEngine.updateOrigin();
+      state.isGameCompleted = gameEngine.isGameCompleted();
       state.moves++;
       tilesGameSlice.caseReducers.setRecordedMoves(state);
-      if (isGameCompleted) {
+      if (state.isGameCompleted) {
         tilesGameSlice.caseReducers.setBestMoves(state);
         state.isViewMovesMode = false;
       }

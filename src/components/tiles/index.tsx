@@ -5,7 +5,7 @@ import {
   tilesGameStateSelector,
 } from "../../store/tilesGame";
 import { Moves } from "./moves";
-import { TilesContainer } from "./style";
+import { TilesSection } from "./style";
 
 export const Tiles = () => {
   const {
@@ -23,11 +23,11 @@ export const Tiles = () => {
   };
 
   return (
-    <>
+    <div className="tiles-main-container">
       {isGameStart && (
         <>
           <Moves moves={moves} bestMoves={bestMoves} />
-          <TilesContainer>
+          <TilesSection>
             <table
               className={`tile ${
                 isGameCompleted && !isViewMovesMode ? "disabled" : ""
@@ -54,9 +54,9 @@ export const Tiles = () => {
                 ))}
               </tbody>
             </table>
-          </TilesContainer>
+          </TilesSection>
         </>
       )}
-    </>
+    </div>
   );
 };

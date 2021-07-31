@@ -1,9 +1,11 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { App } from "./App";
 
-test("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/Ever Real/i);
-  expect(linkElement).toBeInTheDocument();
+describe("<App />", () => {
+  test("renders App", () => {
+    const { container } = render(<App />);
+    const div = container.querySelector("div");
+    expect(div).toHaveClass("App");
+  });
 });

@@ -11,7 +11,7 @@ export const MoveBox: FC<IMoveBoxProps> = (props) => {
         {title === "Best" && <EmojiEventsIcon fontSize="small" />}
         {title}
       </div>
-      <span className="moves-count"> {count}</span>
+      <span className="moves-count">{count}</span>
     </Grid>
   );
 };

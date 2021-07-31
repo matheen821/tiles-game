@@ -22,7 +22,7 @@ export const ActionButtons: FC<IActionButtonsProps> = (props) => {
         onClick={handleStartGame}
         variant="outlined"
         color="primary"
-        className="action-button"
+        className="start-button"
         size="small"
       >
         <PlayArrowIcon />
@@ -32,7 +32,7 @@ export const ActionButtons: FC<IActionButtonsProps> = (props) => {
         onClick={handleSolveByComputer}
         variant="outlined"
         color="primary"
-        className="action-button solve-by-computer-button"
+        className="solve-button"
         size="small"
         disabled={!isGameStart || isGameCompleted}
       >
@@ -43,7 +43,7 @@ export const ActionButtons: FC<IActionButtonsProps> = (props) => {
           onClick={handleResetGame}
           variant="outlined"
           color="secondary"
-          className="action-button"
+          className="reset-button"
           size="small"
         >
           <ReplayIcon fontSize="small" /> Reset
