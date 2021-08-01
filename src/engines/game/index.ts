@@ -14,8 +14,9 @@ class GameEngine {
   color: string;
 
   constructor(previousSquare: ISquare[][], color: string) {
-    this.square = [...previousSquare];
+    this.square = JSON.parse(JSON.stringify(previousSquare));
     this.color = color;
+    this.updateOrigin();
   }
 
   getTile = (row: number, col: number) => {

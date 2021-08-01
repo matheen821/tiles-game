@@ -15,3 +15,7 @@ export const getMinKey = (obj: { [key: string]: number }) => {
       obj[previousValue] < obj[currentValue] ? previousValue : currentValue
   );
 };
+
+export const timeout = (delay: number) => {
+  return new Promise((res) => setTimeout(res, delay));
+};

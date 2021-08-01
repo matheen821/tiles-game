@@ -13,6 +13,7 @@ export interface ITilesGameState {
   recordedMoves: IRecordedMove[];
   isViewMovesMode: boolean;
   viewMovesIndex: number;
+  isSolveAll: boolean;
 }
 
 export type ContainerState = ITilesGameState;

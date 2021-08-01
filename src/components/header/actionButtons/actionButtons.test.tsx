@@ -24,12 +24,14 @@ describe("Testing ActionButtons Component", () => {
     expect(handleStartGame).toHaveBeenCalledTimes(1);
   });
 
-  test("Solve button click", () => {
-    const handleSolveByComputer = jest.fn();
+  test("Solve Next button click", () => {
+    const handleSolveByComputer = jest.fn((isSolveAllSteps) => {
+      expect(isSolveAllSteps).toBeFalsy();
+    });
 
-    render(
+    const { queryByTestId } = render(
       <ActionButtons
-        isGameStart={false}
+        isGameStart={true}
         moves={0}
         isGameCompleted={false}
         isViewMovesMode={false}
@@ -39,11 +41,11 @@ describe("Testing ActionButtons Component", () => {
       />
     );
 
-    const solveButton = screen.getByText("Solve").closest("button");
+    const solveButton = queryByTestId("solve-next-button");
     expect(solveButton).toBeInTheDocument();
-    expect(solveButton).toBeDisabled();
+    expect(solveButton).not.toBeDisabled();
     if (solveButton) fireEvent.click(solveButton);
-    expect(handleSolveByComputer).toHaveBeenCalledTimes(0);
+    expect(handleSolveByComputer).toHaveBeenCalledTimes(1);
   });
 
   test("Reset button click", () => {

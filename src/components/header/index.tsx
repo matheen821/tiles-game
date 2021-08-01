@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ControlNameEnum } from "../../utils";
+import { ControlNameEnum, useInterval } from "../../utils";
 import { Controls } from "./controls";
 import { ActionButtons } from "./actionButtons";
 import { GameResult } from "./gameResult";
@@ -21,9 +21,20 @@ export const Header = () => {
     isGameCompleted,
     isViewMovesMode,
     recordedMoves,
+    isSolveAll,
   } = useSelector(tilesGameStateSelector);
 
   const dispatch = useDispatch();
+
+  useInterval(
+    () => {
+      dispatch(tilesGameActions.solveByComputer());
+      if (isGameCompleted) {
+        dispatch(tilesGameActions.setIsSolveAll());
+      }
+    },
+    !isGameCompleted && isSolveAll ? 1000 : null
+  );
 
   const handleControlAction = (count: number, type: ControlNameEnum) => {
     dispatch(tilesGameActions.setControlActionsData({ count, type }));
@@ -37,7 +48,10 @@ export const Header = () => {
     dispatch(tilesGameActions.resetGame());
   };
 
-  const handleSolveByComputer = () => {
+  const handleSolveByComputer = (isSolveAllSteps: boolean) => {
+    if (isSolveAllSteps) {
+      dispatch(tilesGameActions.setIsSolveAll());
+    }
     dispatch(tilesGameActions.solveByComputer());
   };
 
@@ -69,6 +83,7 @@ export const Header = () => {
         totalRecordedMoves={recordedMoves.length - 1}
         isGameCompleted={isGameCompleted}
         isViewMovesMode={isViewMovesMode}
+        isSolveAll={isSolveAll}
         handleViewMoves={handleViewMoves}
         handleControlAction={handleControlAction}
       />

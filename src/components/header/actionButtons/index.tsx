@@ -18,36 +18,58 @@ export const ActionButtons: FC<IActionButtonsProps> = (props) => {
 
   return (
     <ActionsContainer>
-      <Button
-        onClick={handleStartGame}
-        variant="outlined"
-        color="primary"
-        className="start-button"
-        size="small"
-      >
-        <PlayArrowIcon />
-        {isGameStart ? "New Game" : "Start"}
-      </Button>
-      <Button
-        onClick={handleSolveByComputer}
-        variant="outlined"
-        color="primary"
-        className="solve-button"
-        size="small"
-        disabled={!isGameStart || isGameCompleted}
-      >
-        <ComputerIcon /> Solve
-      </Button>
-      {(moves > 0 || isViewMovesMode) && (
+      <div>
         <Button
-          onClick={handleResetGame}
+          onClick={handleStartGame}
           variant="outlined"
-          color="secondary"
-          className="reset-button"
+          color="primary"
+          className="start-button"
           size="small"
         >
-          <ReplayIcon fontSize="small" /> Reset
+          <PlayArrowIcon />
+          {isGameStart ? "New Game" : "Start"}
         </Button>
+        {(moves > 0 || isViewMovesMode) && (
+          <Button
+            onClick={handleResetGame}
+            variant="outlined"
+            color="secondary"
+            className="reset-button"
+            size="small"
+          >
+            <ReplayIcon fontSize="small" /> Reset
+          </Button>
+        )}
+      </div>
+      {isGameStart && (
+        <>
+          <Button
+            onClick={(e) => {
+              handleSolveByComputer(false);
+            }}
+            variant="outlined"
+            color="primary"
+            className="solve-next-button"
+            size="small"
+            disabled={isGameCompleted}
+            data-testid="solve-next-button"
+          >
+            <ComputerIcon /> Solve Next
+          </Button>
+          <Button
+            onClick={(e) => {
+              handleSolveByComputer(true);
+            }}
+            variant="outlined"
+            color="primary"
+            className="solve-all-button"
+            size="small"
+            disabled={isGameCompleted}
+            data-testid="solve-all-button"
+          >
+            <ComputerIcon /> Solve All
+          </Button>
+        </>
       )}
     </ActionsContainer>
   );
@@ -60,5 +82,5 @@ export interface IActionButtonsProps {
   isViewMovesMode: boolean;
   handleStartGame: () => void;
   handleResetGame: () => void;
-  handleSolveByComputer: () => void;
+  handleSolveByComputer: (isSolveAllSteps: boolean) => void;
 }

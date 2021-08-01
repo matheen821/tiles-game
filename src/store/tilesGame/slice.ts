@@ -2,23 +2,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generateRandomColors, ControlNameEnum } from "../../utils";
-import { ContainerState, IControlAction } from "./types";
-import { createTiles, GameEngine, solver } from "../../engines";
-
-export const initialState: ContainerState = {
-  rows: 6,
-  cols: 6,
-  colorsCount: 4,
-  selectedColor: "",
-  isGameStart: false,
-  moves: 0,
-  bestMoves: 0,
-  square: [],
-  isGameCompleted: false,
-  recordedMoves: [],
-  isViewMovesMode: false,
-  viewMovesIndex: 0,
-};
+import { IControlAction } from "./types";
+import { initialState } from "./initialState";
+import { createTiles, GameEngine, Solver } from "../../engines";
 
 const tilesGameSlice = createSlice({
   name: "tilesGameState",
@@ -29,9 +15,11 @@ const tilesGameSlice = createSlice({
       { payload: { count, type } }: PayloadAction<IControlAction>
     ) {
       if (type === ControlNameEnum.Rows) {
-        state.rows = state.rows + count || state.rows;
+        const rowsCount = state.rows + count;
+        state.rows = rowsCount > 0 && rowsCount <= 10 ? rowsCount : state.rows;
       } else if (type === ControlNameEnum.Cols) {
-        state.cols = state.cols + count || state.cols;
+        const colsCount = state.cols + count;
+        state.cols = colsCount > 0 && colsCount <= 10 ? colsCount : state.cols;
       } else if (type === ControlNameEnum.Colors) {
         const updatedCount = state.colorsCount + count;
         state.colorsCount =
@@ -64,6 +52,7 @@ const tilesGameSlice = createSlice({
       state.viewMovesIndex = 0;
       state.isViewMovesMode = false;
       state.recordedMoves = [];
+      state.isSolveAll = false;
       tilesGameSlice.caseReducers.setSquare(state);
     },
     resetGame(state) {
@@ -71,6 +60,7 @@ const tilesGameSlice = createSlice({
       state.isViewMovesMode = false;
       state.isGameCompleted = false;
       state.moves = 0;
+      state.isSolveAll = false;
       if (state.recordedMoves.length) {
         state.square = state.recordedMoves[0]?.square;
         state.recordedMoves = [];
@@ -80,7 +70,7 @@ const tilesGameSlice = createSlice({
     setOrigin(state, { payload }: PayloadAction<string>) {
       state.selectedColor = payload;
       const gameEngine = new GameEngine(state.square, state.selectedColor);
-      state.square = gameEngine.updateOrigin();
+      state.square = gameEngine.square;
       state.isGameCompleted = gameEngine.isGameCompleted();
       state.moves++;
       tilesGameSlice.caseReducers.setRecordedMoves(state);
@@ -102,14 +92,19 @@ const tilesGameSlice = createSlice({
       state.moves = 0;
       state.bestMoves = 0;
       state.isGameCompleted = false;
+      state.isSolveAll = false;
+    },
+    setIsSolveAll(state) {
+      state.isSolveAll = !state.isSolveAll;
     },
     solveByComputer(state) {
-      const { square, isGameCompleted } = solver(state.square);
-      state.square = square;
-      state.isGameCompleted = isGameCompleted;
+      const solver = new Solver(state.square, false);
+      state.square = solver.tiles;
+      state.isGameCompleted = solver.isGameCompleted;
       state.moves = state.moves + 1;
       tilesGameSlice.caseReducers.setRecordedMoves(state);
-      if (isGameCompleted) {
+
+      if (state.isGameCompleted) {
         tilesGameSlice.caseReducers.setBestMoves(state);
         state.isViewMovesMode = false;
       }

@@ -1,2 +1,2 @@
 export { createTiles, GameEngine } from "./game";
-export { solver } from "./solver";
+export { Solver } from "./solver";
